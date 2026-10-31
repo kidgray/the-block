@@ -140,7 +140,7 @@ Phase 0: ~40 minutes
 
 Phase 1: ~2 hours 10 minutes
 
-Phase 2: 
+Phase 2: ~2 hours 50 minutes
 
 ## Assumptions and Scope
 
