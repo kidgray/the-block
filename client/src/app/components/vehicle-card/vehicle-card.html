@@ -1,0 +1,41 @@
+@let auction = vehicle.auction;
+@let title = vehicle.year + ' ' + vehicle.make + ' ' + vehicle.model + ' ' + vehicle.trim;
+<!-- The title link stretches over the whole card; the heart sits above it as its own button. -->
+<article class="card">
+  <div class="media">
+    <app-vehicle-image [src]="vehicle.thumbnailUrl" [priority]="priority" />
+    <app-status-chip class="chip" [auction]="auction" />
+    <app-favorite-toggle class="favorite" [vehicle]="vehicle" [vehicleTitle]="title" />
+  </div>
+  <div class="body">
+    <h3 class="title">
+      <a class="link" [routerLink]="['/vehicles', vehicle.id]">
+        {{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}
+        <span class="trim">{{ vehicle.trim }}</span>
+      </a>
+    </h3>
+    <p class="meta">
+      Lot {{ vehicle.lot }} · {{ vehicle.odometerKm | km }} · {{ vehicle.city }},
+      {{ vehicle.province }}
+    </p>
+    <p class="badges">
+      <span class="grade">Grade {{ vehicle.conditionGrade | number: '1.1-1' }}</span>
+      @if (vehicle.titleStatus !== 'clean') {
+        <span class="title-flag">{{ vehicle.titleStatus | titlecase }} title</span>
+      }
+      @if (auction.buyNowAvailable) {
+        <span class="buy-now">Buy Now {{ auction.buyNowPrice | cad }}</span>
+      }
+    </p>
+    <div class="price-row">
+      <div>
+        <span class="price-label">{{
+          auction.currentBid === null ? 'Starting bid' : 'Current bid'
+        }}</span>
+        <span class="price">{{ auction.currentBid ?? auction.startingBid | cad }}</span>
+      </div>
+      <span class="bids">{{ auction.bidCount }} {{ auction.bidCount === 1 ? 'bid' : 'bids' }}</span>
+    </div>
+    <app-countdown [auction]="auction" />
+  </div>
+</article>

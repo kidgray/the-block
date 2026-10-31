@@ -1,0 +1,25 @@
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: var(--mat-sys-corner-small);
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font: var(--mat-sys-label-large);
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+  }
+}
+
+main {
+  display: block;
+
+  &:focus {
+    outline: none;
+  }
+}

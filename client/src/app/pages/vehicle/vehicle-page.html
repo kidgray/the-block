@@ -1,0 +1,123 @@
+@let page = page$ | async;
+
+<div class="page">
+  <a class="back" routerLink="/vehicles" [queryParams]="history.lastQueryParams">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon> Back to results
+  </a>
+
+  @if (page?.state === 'loaded' && page.vehicle; as v) {
+    @let warning = titleWarnings[v.titleStatus];
+    <article class="vehicle">
+      <header class="heading">
+        <div>
+          <h1>
+            {{ v.year }} {{ v.make }} {{ v.model }} <span class="trim">{{ v.trim }}</span>
+          </h1>
+          <p class="subtitle">Lot {{ v.lot }} · VIN {{ v.vin }} · {{ v.city }}, {{ v.province }}</p>
+        </div>
+        <app-favorite-toggle class="favorite" [vehicle]="v" [vehicleTitle]="page.title" />
+      </header>
+
+      <div class="gallery-area">
+        <app-gallery [images]="v.images" [altText]="page.title" />
+      </div>
+
+      <aside class="panel-area" aria-label="Bidding">
+        <app-bid-panel [vehicleId]="v.id" [vehicleTitle]="page.title" />
+      </aside>
+
+      <div class="details-area">
+        @if (warning) {
+          <aside class="title-warning" role="note">
+            <mat-icon aria-hidden="true">warning_amber</mat-icon>
+            <div>
+              <strong>{{ warning.heading }}</strong>
+              <p>{{ warning.text }}</p>
+            </div>
+          </aside>
+        }
+
+        <section aria-labelledby="specs-heading">
+          <h2 id="specs-heading">Specifications</h2>
+          <dl class="specs">
+            <div>
+              <dt>Body style</dt>
+              <dd>{{ v.bodyStyle }}</dd>
+            </div>
+            <div>
+              <dt>Odometer</dt>
+              <dd>{{ v.odometerKm | km }}</dd>
+            </div>
+            <div>
+              <dt>Engine</dt>
+              <dd>{{ v.engine }}</dd>
+            </div>
+            <div>
+              <dt>Transmission</dt>
+              <dd class="capitalize">{{ v.transmission }}</dd>
+            </div>
+            <div>
+              <dt>Drivetrain</dt>
+              <dd>{{ v.drivetrain }}</dd>
+            </div>
+            <div>
+              <dt>Fuel type</dt>
+              <dd class="capitalize">{{ v.fuelType }}</dd>
+            </div>
+            <div>
+              <dt>Exterior</dt>
+              <dd>{{ v.exteriorColor }}</dd>
+            </div>
+            <div>
+              <dt>Interior</dt>
+              <dd>{{ v.interiorColor }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section aria-labelledby="condition-heading">
+          <h2 id="condition-heading">Condition</h2>
+          <p class="grade">
+            Grade <strong>{{ v.conditionGrade | number: '1.1-1' }}</strong> / 5 ·
+            <span class="capitalize">{{ v.titleStatus }}</span> title
+          </p>
+          <p>{{ v.conditionReport }}</p>
+          <h3>Damage notes</h3>
+          @if (v.damageNotes.length > 0) {
+            <ul class="damage">
+              @for (note of v.damageNotes; track $index) {
+                <li>{{ note }}</li>
+              }
+            </ul>
+          } @else {
+            <p>No damage noted.</p>
+          }
+        </section>
+
+        <section aria-labelledby="seller-heading">
+          <h2 id="seller-heading">Seller</h2>
+          <p class="seller">
+            <mat-icon aria-hidden="true">storefront</mat-icon>
+            <span>{{ v.sellingDealership }} · {{ v.city }}, {{ v.province }}</span>
+          </p>
+        </section>
+      </div>
+    </article>
+  } @else if (page?.state === 'not-found') {
+    <div class="status" role="alert">
+      <h1>Vehicle not found</h1>
+      <p>It may have been removed when the demo data was reset.</p>
+      <a mat-flat-button routerLink="/vehicles">Browse inventory</a>
+    </div>
+  } @else if (page?.state === 'error') {
+    <div class="status" role="alert">
+      <h1>Couldn't load this vehicle</h1>
+      <p>Check that the API server is running, then try again.</p>
+      <button mat-flat-button type="button" (click)="retry()">Retry</button>
+    </div>
+  } @else {
+    <div class="status" aria-busy="true">
+      <mat-spinner diameter="40" aria-label="Loading vehicle" />
+    </div>
+  }
+</div>

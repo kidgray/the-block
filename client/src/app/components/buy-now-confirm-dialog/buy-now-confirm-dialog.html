@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Buy this vehicle now?</h2>
+<mat-dialog-content>
+  <p class="price">{{ data.price | cad }}</p>
+  <p>for the {{ data.vehicleTitle }}</p>
+  <p class="note">
+    Buying ends the auction immediately and the vehicle is yours. Checkout and payment aren't part
+    of this demo.
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button type="button" [mat-dialog-close]="false">Cancel</button>
+  <button mat-flat-button type="button" [mat-dialog-close]="true">
+    Buy for {{ data.price | cad }}
+  </button>
+</mat-dialog-actions>

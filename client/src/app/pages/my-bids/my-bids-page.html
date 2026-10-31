@@ -1,0 +1,53 @@
+@let view = view$ | async;
+
+<div class="page">
+  <h1>My Bids</h1>
+
+  @if (view?.state === 'loaded' && view.data; as data) {
+    <mat-tab-group
+      mat-stretch-tabs="false"
+      animationDuration="0ms"
+      (selectedIndexChange)="selectTab($event)"
+    >
+      <mat-tab [label]="'Active (' + data.active.length + ')'">
+        @if (data.active.length > 0) {
+          <ul class="rows">
+            @for (row of data.active; track row.vehicle.id) {
+              <li><app-my-bid-row [row]="row" /></li>
+            }
+          </ul>
+        } @else {
+          <div class="empty">
+            <mat-icon aria-hidden="true">gavel</mat-icon>
+            <p>You're not bidding on any live auctions.</p>
+            <a mat-flat-button routerLink="/vehicles">Browse live auctions</a>
+          </div>
+        }
+      </mat-tab>
+      <mat-tab [label]="'Ended (' + data.ended.length + ')'">
+        @if (data.ended.length > 0) {
+          <ul class="rows">
+            @for (row of data.ended; track row.vehicle.id) {
+              <li><app-my-bid-row [row]="row" /></li>
+            }
+          </ul>
+        } @else {
+          <div class="empty">
+            <mat-icon aria-hidden="true">history</mat-icon>
+            <p>Auctions you bid on appear here once they end.</p>
+          </div>
+        }
+      </mat-tab>
+    </mat-tab-group>
+  } @else if (view?.state === 'error') {
+    <div class="empty" role="alert">
+      <mat-icon aria-hidden="true">cloud_off</mat-icon>
+      <p>Couldn't load your bids.</p>
+      <button mat-flat-button type="button" (click)="retry()">Retry</button>
+    </div>
+  } @else {
+    <div class="empty" aria-busy="true">
+      <mat-spinner diameter="40" aria-label="Loading your bids" />
+    </div>
+  }
+</div>

@@ -1,0 +1,16 @@
+@let draft = draft$ | async;
+<div class="header">
+  <h2 mat-dialog-title>Filters</h2>
+  <button mat-icon-button type="button" mat-dialog-close aria-label="Close filters">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  @if (draft) {
+    <app-filters-panel [value]="draft" [facets]="facets" (valueChange)="draft$.next($event)" />
+  }
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button type="button" (click)="clear()">Clear all</button>
+  <button mat-flat-button type="button" (click)="apply()">Apply</button>
+</mat-dialog-actions>

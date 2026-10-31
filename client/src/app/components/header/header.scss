@@ -1,0 +1,100 @@
+// Navy brand bar (design §1): white text on navy is 15.7:1.
+.toolbar {
+  --mat-toolbar-container-background-color: var(--tb-navy);
+  --mat-toolbar-container-text-color: #ffffff;
+  --mat-button-text-label-text-color: #ffffff;
+  --mat-button-text-state-layer-color: #ffffff;
+  --mat-button-filled-container-color: #ffffff;
+  --mat-button-filled-label-text-color: var(--tb-navy);
+
+  gap: 8px;
+  padding: 0 var(--tb-gutter);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  font: var(--mat-sys-title-large);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.mark {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: var(--mat-sys-corner-small);
+  background: var(--tb-brand-blue);
+  color: #ffffff;
+  font: var(--mat-sys-label-large);
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  gap: 4px;
+  margin-left: 16px;
+
+  a {
+    gap: 6px;
+  }
+
+  mat-icon {
+    margin: 0;
+  }
+}
+
+// The current page: a lighter fill and a short orange bar, the brand's accent.
+.active {
+  position: relative;
+  background: rgb(255 255 255 / 12%);
+
+  &::after {
+    position: absolute;
+    right: 14px;
+    bottom: 2px;
+    left: 14px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--tb-orange);
+    content: '';
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.user {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tb-on-navy-muted);
+  font: var(--mat-sys-label-large);
+}
+
+:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Phones: the logo links to the inventory, and the nav links shrink to icons (they keep their names). */
+@media (max-width: 599px) {
+  .brand-name,
+  .nav a:not(.my-bids, .favorites),
+  .nav .label,
+  .name {
+    display: none;
+  }
+
+  .nav {
+    margin-left: 0;
+
+    a {
+      min-width: 44px;
+      padding: 0 10px;
+    }
+  }
+}

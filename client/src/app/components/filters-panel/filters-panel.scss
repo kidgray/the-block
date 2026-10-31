@@ -1,0 +1,37 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+legend {
+  margin-bottom: 4px;
+  font: var(--mat-sys-title-small);
+}
+
+.full {
+  width: 100%;
+}
+
+.range {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+
+  mat-form-field {
+    min-width: 0;
+  }
+}
+
+.capitalize {
+  text-transform: capitalize;
+}

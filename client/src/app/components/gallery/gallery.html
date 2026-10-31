@@ -1,0 +1,22 @@
+<app-vehicle-image
+  class="main"
+  [src]="images[selected] ?? ''"
+  [alt]="altText + ', photo ' + (selected + 1) + ' of ' + images.length"
+  [priority]="true"
+/>
+@if (images.length > 1) {
+  <div class="thumbs" role="group" aria-label="Photos">
+    @for (image of images; track $index; let index = $index) {
+      <button
+        type="button"
+        class="thumb"
+        [class.selected]="index === selected"
+        [attr.aria-pressed]="index === selected"
+        [attr.aria-label]="'Show photo ' + (index + 1) + ' of ' + images.length"
+        (click)="selected = index"
+      >
+        <img [src]="image" alt="" width="160" height="120" loading="lazy" />
+      </button>
+    }
+  </div>
+}

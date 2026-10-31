@@ -1,0 +1,16 @@
+:host {
+  display: inline-block;
+}
+
+.favorite {
+  --mat-icon-button-icon-color: var(--mat-sys-on-surface-variant);
+  --mat-icon-button-state-layer-color: var(--tb-favorite);
+
+  border: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container-lowest);
+  box-shadow: var(--mat-sys-level1);
+
+  &.on {
+    --mat-icon-button-icon-color: var(--tb-favorite);
+  }
+}

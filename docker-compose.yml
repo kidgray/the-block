@@ -1,0 +1,14 @@
+# `docker compose up --build`, then open http://localhost:3000.
+# Demo data persists in the named volume; `docker compose down -v` resets it.
+services:
+  app:
+    build: .
+    image: the-block
+    ports:
+      - '3000:3000'
+    volumes:
+      - the-block-data:/data
+    restart: unless-stopped
+
+volumes:
+  the-block-data:

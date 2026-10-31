@@ -1,0 +1,36 @@
+@let view = view$ | async;
+
+<div class="page">
+  <h1>Favorites</h1>
+
+  @if (view?.state === 'loaded' && view.vehicles; as vehicles) {
+    @if (vehicles.length > 0) {
+      <p class="count">
+        {{ vehicles.length }} {{ vehicles.length === 1 ? 'vehicle' : 'vehicles' }}
+      </p>
+      <ul class="grid">
+        @for (vehicle of vehicles; track vehicle.id; let index = $index) {
+          <li><app-vehicle-card [vehicle]="vehicle" [priority]="index < 4" /></li>
+        }
+      </ul>
+    } @else {
+      <div class="empty">
+        <mat-icon aria-hidden="true">favorite_border</mat-icon>
+        <p>No favorites yet. Tap the heart on any vehicle to keep it here.</p>
+        <a mat-flat-button routerLink="/vehicles">Browse inventory</a>
+      </div>
+    }
+  } @else if (view?.state === 'error') {
+    <div class="empty" role="alert">
+      <mat-icon aria-hidden="true">cloud_off</mat-icon>
+      <p>Couldn't load your favorites.</p>
+      <button mat-flat-button type="button" (click)="retry()">Retry</button>
+    </div>
+  } @else {
+    <ul class="grid" aria-busy="true" aria-label="Loading your favorites">
+      @for (skeleton of skeletons; track skeleton) {
+        <li class="skeleton"></li>
+      }
+    </ul>
+  }
+</div>

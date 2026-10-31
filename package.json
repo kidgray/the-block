@@ -1,0 +1,36 @@
+{
+  "name": "the-block",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Buyer side of a vehicle auction platform (OPENLANE coding challenge).",
+  "packageManager": "npm@11.19.1",
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "workspaces": [
+    "shared",
+    "server",
+    "client",
+    "e2e"
+  ],
+  "scripts": {
+    "dev": "npm run build -w shared && concurrently -k -n shared,server,client -c gray,blue,magenta \"npm run dev -w shared\" \"npm run dev -w server\" \"npm run start -w client\"",
+    "build": "npm run build -w shared && npm run build -w server && npm run build -w client",
+    "start": "npm run start -w server",
+    "lint": "npm run build -w shared && npm run lint --workspaces --if-present",
+    "test": "npm run build -w shared && npm run test --workspaces --if-present",
+    "e2e": "npm run build && npm run e2e -w e2e",
+    "e2e:install": "npm run install-browser -w e2e",
+    "db:reset": "npm run db:reset -w server",
+    "format": "prettier --write \"{shared,server,client}/src/**/*.{ts,html,scss,json}\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^10.0.6",
+    "eslint": "^10.14.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.72.1"
+  }
+}

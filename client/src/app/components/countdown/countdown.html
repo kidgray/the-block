@@ -1,0 +1,4 @@
+@let view = view$ | async;
+@if (view) {
+  <span class="countdown" [class.urgent]="view.urgent">{{ view.label }}</span>
+}

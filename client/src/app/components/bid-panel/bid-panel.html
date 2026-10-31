@@ -1,0 +1,129 @@
+@let state = state$ | async;
+@let panel = panel$ | async;
+@let firstVersion = firstVersion$ | async;
+@if (state && panel) {
+  <section class="panel" aria-labelledby="auction-heading">
+    <div class="panel-header">
+      <h2 id="auction-heading">Auction</h2>
+      <app-status-chip [auction]="state" />
+    </div>
+    <app-countdown [auction]="state" />
+
+    @let price = priceFact(state);
+    <dl class="facts">
+      <div class="fact price-fact">
+        <dt>{{ price.label }}</dt>
+        <!-- Re-created when the amount changes, which replays the highlight for a new bid. -->
+        @for (amount of [price.amount]; track amount) {
+          <dd class="price" [class.changed]="firstVersion !== null && state.version > firstVersion">
+            {{ amount | cad }}
+          </dd>
+        }
+      </div>
+      <div class="fact">
+        <dt>Bids</dt>
+        <dd>{{ state.bidCount }}</dd>
+      </div>
+      <!-- A Buy Now purchase is a sale at a fixed price, so the reserve no longer applies. -->
+      @if (state.outcome !== 'sold_buy_now') {
+        <div class="fact">
+          <dt>Reserve</dt>
+          <dd>{{ reserveLabels[state.reserveStatus] }}</dd>
+        </div>
+      }
+    </dl>
+
+    @switch (state.status) {
+      @case ('live') {
+        @if (state.viewer?.isHighBidder) {
+          <p class="position winning">
+            <mat-icon aria-hidden="true">emoji_events</mat-icon> You're the high bidder
+          </p>
+        } @else if (state.viewer?.hasBid) {
+          <p class="position outbid">
+            <mat-icon aria-hidden="true">error_outline</mat-icon> You've been outbid
+          </p>
+        }
+
+        <button
+          mat-flat-button
+          type="button"
+          class="bid-button"
+          [disabled]="panel.pending || state.viewer?.isHighBidder"
+          (click)="bidMinimum(state)"
+        >
+          {{ panel.pending ? 'Placing bid…' : 'Bid ' + (state.minNextBid | cad) }}
+        </button>
+
+        <form class="custom" [formGroup]="bidForm" (ngSubmit)="bidCustom(state)">
+          <mat-form-field appearance="outline" class="amount-field">
+            <mat-label>Your bid (CAD)</mat-label>
+            <span matTextPrefix>$&nbsp;</span>
+            <input
+              matInput
+              type="number"
+              inputmode="numeric"
+              formControlName="amount"
+              [errorStateMatcher]="errorsWhileTyping"
+              [min]="state.minNextBid"
+              [max]="maxBid"
+              step="1"
+            />
+            <mat-hint>Minimum {{ state.minNextBid | cad }}</mat-hint>
+            @if (customAmount.hasError('required')) {
+              <mat-error>Enter an amount</mat-error>
+            } @else if (customAmount.hasError('min')) {
+              <mat-error>The minimum bid is {{ state.minNextBid | cad }}</mat-error>
+            } @else if (customAmount.hasError('max')) {
+              <mat-error>Bids are limited to {{ maxBid | cad }}</mat-error>
+            } @else if (customAmount.hasError('wholeDollars')) {
+              <mat-error>Enter whole dollars</mat-error>
+            }
+          </mat-form-field>
+          <button
+            mat-stroked-button
+            type="submit"
+            class="custom-button"
+            [disabled]="panel.pending || state.viewer?.isHighBidder || customAmount.invalid"
+          >
+            Place bid
+          </button>
+        </form>
+
+        @if (state.buyNowAvailable && state.buyNowPrice !== null) {
+          <div class="buy-now">
+            <p>Skip the bidding and buy it outright.</p>
+            <button
+              mat-stroked-button
+              type="button"
+              class="buy-now-button"
+              [disabled]="panel.pending"
+              (click)="buyNow(state)"
+            >
+              Buy now for {{ state.buyNowPrice | cad }}
+            </button>
+          </div>
+        }
+      }
+      @case ('upcoming') {
+        <p class="note">
+          Bidding opens {{ state.auctionStart | date: 'MMM d, h:mm a' }}. The opening bid is
+          {{ state.startingBid | cad }}.
+        </p>
+      }
+      @case ('ended') {
+        <p class="outcome">{{ outcomeLabel(state) }}</p>
+      }
+    }
+
+    @if (panel.message; as message) {
+      <p
+        class="message"
+        [class.success]="message.tone === 'success'"
+        [class.error]="message.tone === 'error'"
+      >
+        {{ message.text }}
+      </p>
+    }
+  </section>
+}

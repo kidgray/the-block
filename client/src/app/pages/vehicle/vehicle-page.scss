@@ -1,0 +1,141 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px var(--tb-gutter) 48px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+  font: var(--mat-sys-label-large);
+  text-decoration: none;
+}
+
+// Mobile: heading, gallery, bid panel, details. Desktop: the panel sticks beside the content.
+.vehicle {
+  display: grid;
+  gap: 24px;
+  // minmax(0, …) stops wide content (e.g., the thumbnail strip) from widening the column.
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'heading' 'gallery' 'panel' 'details';
+
+  @media (min-width: 1024px) {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    grid-template-areas: 'heading heading' 'gallery panel' 'details panel';
+  }
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  grid-area: heading;
+
+  .favorite {
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font: var(--mat-sys-headline-medium);
+  }
+}
+
+.trim {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  color: var(--mat-sys-on-surface-variant);
+  overflow-wrap: anywhere;
+}
+
+.gallery-area {
+  grid-area: gallery;
+}
+
+.panel-area {
+  grid-area: panel;
+
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+  }
+}
+
+.details-area {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 32px;
+  grid-area: details;
+
+  h2 {
+    margin-bottom: 12px;
+    font: var(--mat-sys-title-large);
+  }
+
+  h3 {
+    margin: 16px 0 8px;
+    font: var(--mat-sys-title-small);
+  }
+}
+
+.title-warning {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--mat-sys-corner-medium);
+  background: var(--tb-warning-container);
+  color: var(--tb-warning);
+
+  p {
+    margin: 4px 0 0;
+  }
+}
+
+.specs {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  // Two columns from a 296px content width (a 360px phone), more on wider screens.
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+
+  dt {
+    color: var(--mat-sys-on-surface-variant);
+    font: var(--mat-sys-label-medium);
+  }
+
+  dd {
+    margin: 0;
+    font: var(--mat-sys-body-large);
+  }
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.damage {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.seller {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 64px 16px;
+  text-align: center;
+}

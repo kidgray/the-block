@@ -1,0 +1,51 @@
+@let user = user$ | async;
+<header>
+  <mat-toolbar class="toolbar">
+    <a class="brand" routerLink="/vehicles" aria-label="The Block, inventory">
+      <span class="mark" aria-hidden="true">TB</span>
+      <span class="brand-name">The Block</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a
+        mat-button
+        routerLink="/vehicles"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="exactPath"
+        ariaCurrentWhenActive="page"
+        >Inventory</a
+      >
+      <a
+        mat-button
+        routerLink="/my-bids"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        class="my-bids"
+        aria-label="My Bids"
+      >
+        <mat-icon aria-hidden="true">gavel</mat-icon>
+        <span class="label">My Bids</span>
+      </a>
+      <a
+        mat-button
+        routerLink="/favorites"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        class="favorites"
+        aria-label="Favorites"
+      >
+        <mat-icon aria-hidden="true">favorite_border</mat-icon>
+        <span class="label">Favorites</span>
+      </a>
+    </nav>
+    <span class="spacer"></span>
+    @if (user) {
+      <span class="user">
+        <mat-icon aria-hidden="true">account_circle</mat-icon>
+        <span class="name">{{ user.displayName }}</span>
+      </span>
+      <button mat-button type="button" (click)="signOutClicked()">Sign out</button>
+    } @else if (user === null) {
+      <button mat-flat-button type="button" (click)="signInClicked()">Sign in</button>
+    }
+  </mat-toolbar>
+</header>

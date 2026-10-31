@@ -1,0 +1,16 @@
+# Keep the build context small and free of host builds, databases, and secrets.
+**/node_modules
+**/dist
+**/coverage
+**/.angular
+server/data
+.git
+.idea
+.vscode
+**/.env
+**/.env.*
+author-dev-docs
+docs
+*.md
+**/test-results
+**/playwright-report

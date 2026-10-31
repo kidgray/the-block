@@ -1,0 +1,12 @@
+@let favorite = (favorite$ | async) ?? false;
+<button
+  mat-icon-button
+  type="button"
+  class="favorite"
+  [class.on]="favorite"
+  [attr.aria-label]="'Favorite: ' + vehicleTitle"
+  [attr.aria-pressed]="favorite"
+  (click)="toggle(!favorite)"
+>
+  <mat-icon aria-hidden="true">{{ favorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+</button>

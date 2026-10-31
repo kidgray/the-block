@@ -1,0 +1,126 @@
+@use '@angular/material' as mat;
+@use './theme/theme-colors' as palettes;
+
+// The OPENLANE-derived palette (design §1, D1), sampled from OPENLANE's public sites: navy
+// #0a1b5f, action blue #0061ff, and orange and green accents. Every text pairing below meets
+// WCAG 2.2 AA (4.5:1); the ratios are noted beside each override.
+html {
+  color-scheme: light;
+  @include mat.theme(
+    (
+      color: (
+        primary: palettes.$primary-palette,
+        tertiary: palettes.$tertiary-palette,
+        theme-type: light,
+      ),
+      typography: (
+        plain-family: 'Inter, Roboto, sans-serif',
+        brand-family: 'Poppins, Inter, sans-serif',
+        bold-weight: 600,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: 0,
+    )
+  );
+  // The generated palette lands near the brand colours; these pin the exact ones.
+  @include mat.theme-overrides(
+    (
+      // White text on the action blue: 5.06:1.
+      primary: #0061ff,
+      on-primary: #ffffff,
+      primary-container: #dbe1ff,
+      on-primary-container: #0a1b5f,
+      // Navy text on light sky blue: 13.4:1.
+      secondary-container: #e0eff8,
+      on-secondary-container: #0a1b5f,
+      // Navy text on the page background: 14.5:1; secondary text: 6.7:1 (7.3:1 on white).
+      surface: #f4f6fa,
+      on-surface: #0a1b5f,
+      on-surface-variant: #4b5675,
+      surface-container-lowest: #ffffff,
+      surface-container-low: #f8f9fc,
+      surface-container: #eef1f7,
+      surface-container-high: #e8ecf4,
+      surface-container-highest: #e1e6f0,
+      outline: #6b7491,
+      outline-variant: #d5dbe7
+    )
+  );
+}
+
+:root {
+  --tb-gutter: 16px;
+  --tb-content-width: 1440px;
+  --tb-search-bar-height: 72px;
+
+  // Brand colours, for the places Material roles don't cover.
+  --tb-navy: #0a1b5f; // header background; white text on it: 15.7:1
+  --tb-brand-blue: #0061ff;
+  --tb-orange: #fc6c2b; // accent fill only: navy text on it 5.5:1, white text fails
+  --tb-green: #3db331; // accent fill only: navy text on it 5.8:1
+  --tb-on-navy-muted: #c9d3f5; // secondary text on the navy header: 10.6:1
+
+  // Status colours (text on container: all at least 5.8:1).
+  --tb-success: #1d6b19;
+  --tb-success-container: #e3f5e1;
+  --tb-warning: #9a3a0b;
+  --tb-warning-container: #ffe8dc;
+  --tb-urgent: #a63f0c; // countdown in the final minutes, on white: 6.3:1
+  --tb-favorite: #c8102e; // filled heart, on white: 5.9:1
+  --tb-highlight: #ffd9c7; // brief flash behind a price that just changed
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+a {
+  color: var(--mat-sys-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Dialog-based filter drawer (design §9): full-height panel on the right.
+.filters-drawer .mat-mdc-dialog-surface {
+  border-radius: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

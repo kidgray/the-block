@@ -1,0 +1,135 @@
+1. PROJECT SUMMARY
+
+This project will be a web application that models the buyer side of a vehicle auction platform.
+This platform will be scaled and optimized to process thousands of vehicles per day. In particular, this project
+is being undertaken as a technical demo for OPENLANE as part of a coding challenge.
+
+At minimum, buyers will be able to browse inventory, inspect vehicle details, and place bids, in accordance with
+the core experience requirements listed by OPENLANE.
+
+In addition to these minimum requirements, a number of other user experience features will be implemented based on
+features available in the Unified OPENLANE App as described by OPENLANE themselves in their Wholesale Insights
+(https://www.openlane.com/insights/navigating-the-unified-openlane-app/).
+
+Efforts will be made to replicate the look, feel and branding (color scheme, etc) of the OPENLANE app to provide
+an authentic and familiar experience for reviewers at OPENLANE.
+
+2. TECH STACK
+
+Frontend: Angular v22, TypeScript, Vite
+
+Backend: Node.js, Express
+
+Testing: Jest (Unit tests)
+
+Database (will not be necessary for this demo app, but this is what I would use in a production environment): MySQL
+
+Cloud (will not be necessary for this demo app, but this is what I would use in a production environment): AWS
+
+Containerization: Docker and Docker-compose
+
+3. REASONING FOR TECH STACK
+
+There is certainly an argument to be made for React due to its efficient virtual DOM and high market share control
+leading to widespread availability of third-party libraries that provide necessary functionalities (i.e. Socket.io
+for real-time data syncing). Furthermore, React's Next.js framework provides means to optimize initial load times
+and search engine optimization via built-in Server-Side Rendering (SSR) capabilities.
+
+However, I ultimately selected Angular v22. There are a number of reasons for this:
+
+Angular has a built-in HttpClient class that provides a number of quality-of-life benefits for devs. The class
+makes it easy to attach auth tokens to requests and retry failed API calls. In React, we'd need to write this logic
+manually using something like Axios to facilitate the process.
+
+Angular's built-in Reactive Forms provide strong validation, form controls (allowing for conditionally showing
+fields, etc). Auction platforms tend to involve a lot of forms (bid amounts, payment info, seller listings, shipping
+info, buyer info, ...), so this is beneficial. On React, a third-party library such as React Hook Form would be needed
+to achieve the same result.
+
+RxJS is deeply integrated into Angular and is an excellent tool for working with complex async patterns. Honestly,
+this was my biggest reason for selecting Angular. RxJS's API allows for a simple means of retrying failed WebSocket
+connections and merging or handling the outputs of multiple data streams through methods such as forkJoin() and
+mergeMap(), concatMap() and switchMap().
+
+Most importantly, it's important to note that all the things I mentioned above either come bundled with Angular
+out of the box or are deeply integrated with it to the point of being basically ubiquitous in Angular projects (RxJS).
+
+It should also be noted that many of the benefits available in Next.js (such as Server Side Rendering) are also
+available as built-in features of newer versions of Angular (Angular Universal, for example, provides the same functionality
+without requiring a separate framework like Next.js on top of React).
+
+4. FUNCTIONAL REQUIREMENTS
+
+The following are functional requirements specified by OPENLANE:
+
+- Users should be able to browse and search the vehicle inventory
+
+- Vehicle detail views with specs, condition, damage notes, selling dealership, and photos. Essential information
+such as seller name, make, model, VIN and mileage should be included.
+
+- A buyer should be able to place bids on vehicles
+
+To these, I will append the following additional functional requirements:
+
+- Users should be able to log in. Account creation will not be implemented and the login button will simply automatically
+log users in with a fake "default" account.
+
+- Users should be able to view a list of bids they have placed.
+
+- Users should be able to designate a listing as a favorite and view their favorite listings. The Favorites page will
+display the Vehicle objects that the user has favorited.
+
+5. NON-FUNCTIONAL REQUIREMENTS
+
+- Search bar on main listing page should remain visible at the same spot at the top of the screen at all times
+when scrolling up and down the page, i.e. it should float
+
+- All views, pages and features of the app should be responsive with respect to viewport dimensions
+
+- Color scheme should match OPENLANE's branding and color scheme
+
+- AUTHOR_README should provide instructions on how to run the project locally with docker and docker-compose
+
+6. OUT-OF-SCOPE FEATURES
+
+The following features are considered OUT OF SCOPE for this product:
+
+- Authentication
+
+- Checkout and Payment
+
+- Dealer Admin Tooling
+
+- Seller Workflows
+
+7. CORE ENTITIES
+
+- User
+
+- Vehicle
+
+- Bid
+
+8. API OR INTERFACE
+
+- GET /vehicles returns all vehicles such that they can be displayed on the main vehicle list page
+
+- GET /vehicles/:vehicleId should return a single Vehicle object and all its associated data. This will be used when
+clicking on a specific vehicle on the vehicle list page
+
+- POST /login will simply "log in" to the fake User account that will be created such that features that require
+a User to be logged in can be used (such as placing bids, checking the list of bids, etc)
+
+- GET /users/:userId will return a user's profile data. In a production app, this would contain all the user's account
+data, including profile info, payment methods, address, etc. In this demo app, it will return only pre-seeded demo account
+data limited to the User's name and userId.
+
+- GET /users/:userId/bids will return all bids placed by this user so they can be displayed on the Bids page of the
+user profile.
+
+- GET /users/:userId/favorites will return all vehicles favorited by this user so they can be displayed on the Favorites
+page of the user profile.
+
+- POST /bid will take a JSON body with the vehicleId, userId, and offerAmount fields.
+
+- GET /bids/:userId will return all bids placed by a user with the given userId.

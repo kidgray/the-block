@@ -1,6 +1,12 @@
 node_modules/
+dist/
+coverage/
+.angular/
+server/data/
 .env
 .env.local
 .DS_Store
 *.log
 *.bak
+test-results/
+playwright-report/

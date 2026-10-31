@@ -1,0 +1,18 @@
+<!-- Keyed by src so changing the photo creates a fresh <img> (and clears a previous failure). -->
+@for (current of [src]; track current) {
+  @if (!failed) {
+    <img
+      [ngSrc]="current"
+      width="800"
+      height="600"
+      [alt]="alt"
+      [priority]="priority"
+      (error)="failed = true"
+    />
+  } @else {
+    <div class="fallback" role="img" [attr.aria-label]="alt || null">
+      <mat-icon aria-hidden="true">directions_car</mat-icon>
+      <span>Photo unavailable</span>
+    </div>
+  }
+}

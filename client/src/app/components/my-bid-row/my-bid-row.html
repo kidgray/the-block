@@ -1,0 +1,28 @@
+@let vehicle = row.vehicle;
+<a class="row" [routerLink]="['/vehicles', vehicle.id]">
+  <app-vehicle-image class="thumb" [src]="vehicle.thumbnailUrl" />
+  <div class="identity">
+    <h3 class="title">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</h3>
+    <p class="lot">Lot {{ vehicle.lot }}</p>
+    <span class="status" [class]="status.tone">{{ status.label }}</span>
+  </div>
+  <dl class="figures">
+    <div>
+      <dt>Your highest bid</dt>
+      <dd class="my-bid">{{ row.myHighestBid | cad }}</dd>
+    </div>
+    <div>
+      <dt>{{ isActive ? 'Current price' : 'Final price' }}</dt>
+      <dd class="price">{{ row.price | cad }}</dd>
+    </div>
+    <div>
+      @if (isActive) {
+        <dt>Time left</dt>
+        <dd><app-countdown [auction]="vehicle.auction" /></dd>
+      } @else {
+        <dt>Ended</dt>
+        <dd class="ended">{{ vehicle.auction.auctionEnd | date: 'MMM d, h:mm a' }}</dd>
+      }
+    </div>
+  </dl>
+</a>

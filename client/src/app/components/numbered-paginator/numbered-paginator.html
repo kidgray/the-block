@@ -1,0 +1,48 @@
+@if (pageCount > 1) {
+  <nav class="paginator" aria-label="Pagination">
+    @if (page > 1) {
+      <a
+        class="step"
+        [routerLink]="[]"
+        [queryParams]="paramsFor(page - 1)"
+        queryParamsHandling="merge"
+        aria-label="Previous page"
+      >
+        <mat-icon aria-hidden="true">chevron_left</mat-icon>
+      </a>
+    } @else {
+      <span class="step disabled" aria-hidden="true"><mat-icon>chevron_left</mat-icon></span>
+    }
+
+    @for (item of items; track $index) {
+      @if (item === 'gap') {
+        <span class="gap" aria-hidden="true">…</span>
+      } @else {
+        <a
+          class="number"
+          [class.current]="item === page"
+          [routerLink]="[]"
+          [queryParams]="paramsFor(item)"
+          queryParamsHandling="merge"
+          [attr.aria-current]="item === page ? 'page' : null"
+          [attr.aria-label]="'Page ' + item"
+          >{{ item }}</a
+        >
+      }
+    }
+
+    @if (page < pageCount) {
+      <a
+        class="step"
+        [routerLink]="[]"
+        [queryParams]="paramsFor(page + 1)"
+        queryParamsHandling="merge"
+        aria-label="Next page"
+      >
+        <mat-icon aria-hidden="true">chevron_right</mat-icon>
+      </a>
+    } @else {
+      <span class="step disabled" aria-hidden="true"><mat-icon>chevron_right</mat-icon></span>
+    }
+  </nav>
+}

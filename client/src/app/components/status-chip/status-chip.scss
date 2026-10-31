@@ -1,0 +1,46 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: var(--mat-sys-corner-full);
+  font: var(--mat-sys-label-medium);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+// Live auctions carry the brand blue, with a pulsing dot (white on blue: 5.06:1).
+.live {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+
+  &::before {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: live-pulse 1.6s ease-in-out infinite;
+    content: '';
+  }
+}
+
+@keyframes live-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.upcoming {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.sold {
+  background: var(--tb-success-container);
+  color: var(--tb-success);
+}
+
+.closed {
+  background: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-on-surface-variant);
+}

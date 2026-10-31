@@ -1,0 +1,99 @@
+@let query = query$ | async;
+@let results = results$ | async;
+@let desktop = isDesktop$ | async;
+@let facets = facets$ | async;
+
+<div class="search-bar">
+  <div class="search-inner" role="search">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
+      <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+      <input
+        matInput
+        type="search"
+        [formControl]="search"
+        placeholder="Search year, make, model, VIN, or lot"
+        aria-label="Search vehicles"
+        autocomplete="off"
+      />
+      @if (search.value) {
+        <button
+          matSuffix
+          mat-icon-button
+          type="button"
+          aria-label="Clear search"
+          (click)="search.setValue('')"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+    @if (!desktop && query) {
+      @let count = activeFilterCount(filtersOf(query));
+      <button
+        mat-stroked-button
+        type="button"
+        class="filters-button"
+        (click)="openFilters(query, facets)"
+      >
+        <mat-icon>tune</mat-icon>
+        Filters{{ count ? ' (' + count + ')' : '' }}
+      </button>
+    }
+  </div>
+</div>
+
+<div class="layout">
+  @if (desktop && query) {
+    <aside class="sidebar" aria-labelledby="filters-heading">
+      <h2 id="filters-heading" class="sidebar-title">Filters</h2>
+      <app-filters-panel
+        [value]="filtersOf(query)"
+        [facets]="facets"
+        (valueChange)="applyFilters($event)"
+      />
+    </aside>
+  }
+
+  <section class="results" aria-labelledby="results-heading">
+    <h1 id="results-heading" class="visually-hidden">Vehicle inventory</h1>
+
+    @if (results?.state === 'loaded' && results.data; as data) {
+      <p class="count" role="status">
+        {{ data.total }} {{ data.total === 1 ? 'vehicle' : 'vehicles' }}
+      </p>
+      @if (data.items.length > 0) {
+        <ul class="grid">
+          @for (vehicle of data.items; track vehicle.id; let index = $index) {
+            <li><app-vehicle-card [vehicle]="vehicle" [priority]="index < 4" /></li>
+          }
+        </ul>
+        <app-numbered-paginator
+          [page]="data.page"
+          [total]="data.total"
+          [pageSize]="data.pageSize"
+        />
+      } @else {
+        <div class="empty">
+          <mat-icon aria-hidden="true">search_off</mat-icon>
+          <h2>No vehicles match</h2>
+          <p>Try a different search, or clear the filters.</p>
+          <button mat-flat-button type="button" (click)="clearAll()">Clear filters</button>
+        </div>
+      }
+    } @else if (results?.state === 'error') {
+      <div class="empty" role="alert">
+        <mat-icon aria-hidden="true">cloud_off</mat-icon>
+        <h2>Couldn't load vehicles</h2>
+        <p>Check that the API server is running, then try again.</p>
+        <button mat-flat-button type="button" (click)="retry()">Retry</button>
+      </div>
+    } @else {
+      <p class="count" aria-busy="true">Loading vehicles…</p>
+      <ul class="grid" aria-hidden="true">
+        @for (skeleton of skeletons; track skeleton) {
+          <li class="skeleton"></li>
+        }
+      </ul>
+    }
+  </section>
+</div>

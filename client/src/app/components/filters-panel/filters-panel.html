@@ -1,0 +1,145 @@
+<mat-form-field appearance="outline" subscriptSizing="dynamic" class="full">
+  <mat-label>Sort by</mat-label>
+  <mat-select [value]="value.sort" (selectionChange)="setSort($event.value)">
+    @for (option of sortOptions; track option.value) {
+      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+<fieldset class="group">
+  <legend>Auction status</legend>
+  @for (option of statusOptions; track option.value) {
+    <mat-checkbox
+      [checked]="value.status.includes(option.value)"
+      [disabled]="isOnlySelected(option.value)"
+      (change)="toggleStatus(option.value, $event.checked)"
+      >{{ option.label }}</mat-checkbox
+    >
+  }
+</fieldset>
+
+<mat-slide-toggle [checked]="value.buyNow" (change)="patch({ buyNow: $event.checked })"
+  >Buy Now available</mat-slide-toggle
+>
+
+@if (facets) {
+  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="full">
+    <mat-label>Make</mat-label>
+    <mat-select multiple [value]="value.makes" (selectionChange)="patch({ makes: $event.value })">
+      @for (make of facets.makes; track make) {
+        <mat-option [value]="make">{{ make }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="full">
+    <mat-label>Body style</mat-label>
+    <mat-select
+      multiple
+      [value]="value.bodyStyles"
+      (selectionChange)="patch({ bodyStyles: $event.value })"
+    >
+      @for (bodyStyle of facets.bodyStyles; track bodyStyle) {
+        <mat-option [value]="bodyStyle" class="capitalize">{{ bodyStyle }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="full">
+    <mat-label>Province</mat-label>
+    <mat-select
+      multiple
+      [value]="value.provinces"
+      (selectionChange)="patch({ provinces: $event.value })"
+    >
+      @for (province of facets.provinces; track province) {
+        <mat-option [value]="province">{{ province }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+}
+
+<fieldset class="group">
+  <legend>Year</legend>
+  <div class="range">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>From</mat-label>
+      <input
+        matInput
+        type="number"
+        inputmode="numeric"
+        min="1900"
+        max="2100"
+        name="yearMin"
+        [value]="value.yearMin ?? ''"
+        (change)="setNumber('yearMin', $event)"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>To</mat-label>
+      <input
+        matInput
+        type="number"
+        inputmode="numeric"
+        min="1900"
+        max="2100"
+        name="yearMax"
+        [value]="value.yearMax ?? ''"
+        (change)="setNumber('yearMax', $event)"
+      />
+    </mat-form-field>
+  </div>
+</fieldset>
+
+<fieldset class="group">
+  <legend>Current price (CAD)</legend>
+  <div class="range">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Min</mat-label>
+      <span matTextPrefix>$&nbsp;</span>
+      <input
+        matInput
+        type="number"
+        inputmode="numeric"
+        min="0"
+        name="priceMin"
+        [value]="value.priceMin ?? ''"
+        (change)="setNumber('priceMin', $event)"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Max</mat-label>
+      <span matTextPrefix>$&nbsp;</span>
+      <input
+        matInput
+        type="number"
+        inputmode="numeric"
+        min="0"
+        name="priceMax"
+        [value]="value.priceMax ?? ''"
+        (change)="setNumber('priceMax', $event)"
+      />
+    </mat-form-field>
+  </div>
+</fieldset>
+
+<mat-form-field appearance="outline" subscriptSizing="dynamic" class="full">
+  <mat-label>Condition grade</mat-label>
+  <mat-select [value]="value.gradeMin ?? 0" (selectionChange)="setGrade($event.value)">
+    @for (grade of gradeOptions; track grade) {
+      <mat-option [value]="grade">{{ grade === 0 ? 'Any' : grade + ' and up' }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+<fieldset class="group">
+  <legend>Title status</legend>
+  @for (option of titleOptions; track option.value) {
+    <mat-checkbox
+      [checked]="value.titleStatuses.includes(option.value)"
+      (change)="toggleTitle(option.value, $event.checked)"
+      >{{ option.label }}</mat-checkbox
+    >
+  }
+</fieldset>
