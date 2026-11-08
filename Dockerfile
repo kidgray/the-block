@@ -1,8 +1,17 @@
 # syntax=docker/dockerfile:1
 #
 # One image in which Express serves both the API and the Angular build (design §15, D10).
-# Both stages use node:24-slim (Debian, glibc), so better-sqlite3's prebuilt Linux binary matches
-# the runtime and nothing has to be compiled.
+# Both stages use node:24-slim (Debian, glibc), so better-sqlite3's bundled prebuilds/linux-*.node
+# matches the runtime and nothing has to be compiled.
+#
+# Every `npm ci` passes --ignore-scripts. better-sqlite3 ships a binding.gyp but no install script,
+# so npm would otherwise run `node-gyp rebuild` by default, which needs Python and a C++ toolchain
+# that slim images lack, and whose output better-sqlite3 never loads when a prebuild exists. The
+# other install scripts in the tree (esbuild, lmdb, msgpackr-extract, @parcel/watcher) only pick or
+# verify the prebuilt binaries from their platform packages, which load fine without them.
+#
+# The npm cache is a BuildKit cache mount, so tarballs are downloaded once and reused across both
+# stages and across rebuilds, including after a lockfile change. It never ends up in the image.
 
 # ---- Build: compile the shared contracts and the server, and build the client ----
 FROM node:24-slim AS build
@@ -15,7 +24,7 @@ COPY server/package.json server/
 COPY client/package.json client/
 # The e2e workspace is listed in the lockfile, so npm ci needs its manifest (not its tests).
 COPY e2e/package.json e2e/
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci --ignore-scripts --no-audit --no-fund
 
 COPY shared shared
 COPY server server
@@ -36,7 +45,8 @@ COPY shared/package.json shared/
 COPY server/package.json server/
 COPY client/package.json client/
 COPY e2e/package.json e2e/
-RUN npm ci --omit=dev --workspace=server && npm cache clean --force
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev --workspace=server --ignore-scripts --no-audit --no-fund
 
 COPY --from=build /app/shared/dist shared/dist
 COPY --from=build /app/server/dist server/dist
