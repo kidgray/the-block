@@ -42,7 +42,9 @@
   top: calc(var(--tb-search-bar-height) + 16px);
   align-self: start;
   // Taller than the screen once every filter is shown, so it scrolls on its own while sticky.
-  max-height: calc(100vh - var(--tb-search-bar-height) - 32px);
+  // Sized for its unstuck position (below the header) so its bottom stays on screen at the top
+  // of the page too; once stuck that leaves a header-height gap below it.
+  max-height: calc(100vh - var(--tb-header-height) - var(--tb-search-bar-height) - 32px);
   overflow-y: auto;
   padding-right: 4px;
   overscroll-behavior: contain;
